@@ -1,0 +1,25 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-application
+  namespace: argocd-ns
+spec:
+  project: default
+
+  source:
+    repoURL:                        # gitea url
+    targetRevision: HEAD #Last Commit on gitea
+    path: app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: app-ns
+
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true #to Create app-ns namespace automatically
+
+
+    automated:
+      selfHeal: true #to make synchronization with gitea repo with any manual changes in cluster
+      prune: true #if we delete or change any thing in the files apply them to the cluster
